@@ -48,12 +48,12 @@ let Student_obj = {
         }catch (error) {
             res.status(500).send(error)
         }
-    } )
+    });
 
 // Get Specific Student services
     exports.getSpecificStudent = functions.https.onRequest( async ( req , res ) => {
         try {
-            const Id = req.params.id
+            const Id = req.query.id
             database.collection(userCollection).doc(Id).get()
             .then( student => { 
                 if(!student.exists) throw new Error('Student not found');
@@ -62,7 +62,7 @@ let Student_obj = {
         } catch (error) {
             res.status(500).send(error)
         }
-    })      
+    });      
 
 // Add New Student service
     exports.addStudent = functions.https.onRequest( async ( req , res ) => {
@@ -83,7 +83,7 @@ let Student_obj = {
 
 // Update Specific Student service
     exports.updateSpecificStudent = functions.https.onRequest( async ( req , res ) => {
-        const Id = req.params.id;
+        const Id = req.query.id;
         await database.collection(userCollection).doc(Id).set(req.body,{ merge :true })
         .then( () => res.json({ id : Id }) )
         .catch( (error) => res.status(500).send(error) )
@@ -91,7 +91,7 @@ let Student_obj = {
 
 // Delete Specific Student service
     exports.deleteSpecificStudent = functions.https.onRequest( async ( req , res ) => {
-        const Id = req.params.id
+        const Id = req.query.id
         database.collection(userCollection).doc(Id).delete()
         .then( () => res.status(204).send("Document successfully deleted!"))
         .catch( function (error) {
